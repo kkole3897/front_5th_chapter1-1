@@ -4,15 +4,16 @@ import store from "../store";
 
 const Header = () => {
   const isLoggedIn = store.isLoggedIn();
+  const currentPathname = window.location.pathname;
 
   const navItems = isLoggedIn
     ? `
-      <li>${Link({ to: "/", className: "text-blue-600", children: "홈" })}</li>
-      <li>${Link({ to: "/profile", className: "text-gray-600", children: "프로필" })}</li>
+      <li>${Link({ to: "/", className: currentPathname === "/" ? "text-blue-600" : "text-gray-600", children: "홈" })}</li>
+      <li>${Link({ to: "/profile", className: currentPathname === "/profile" ? "text-blue-600" : "text-gray-600", children: "프로필" })}</li>
       <li>${Link({ to: "#", className: "text-gray-600", children: "로그아웃" })}</li>
     `
     : `
-      <li>${Link({ to: "/", className: "text-blue-600", children: "홈" })}</li>
+      <li>${Link({ to: "/", className: currentPathname === "/" ? "text-blue-600" : "text-gray-600", children: "홈" })}</li>
       <li>${Link({ to: "/login", className: "text-gray-600", children: "로그인" })}</li>
     `;
 
