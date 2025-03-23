@@ -7,7 +7,7 @@ import { createHistoryRouter } from "./libs/router";
 
 const createRoot = (root) => {
   const render = (callback) => {
-    root.innerHTML = callback();
+    callback(root);
   };
 
   return { render };
