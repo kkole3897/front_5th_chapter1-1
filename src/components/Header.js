@@ -8,18 +8,17 @@ const Header = () => {
   const isLoggedIn = store.isLoggedIn();
   const currentPathname = window.location.pathname;
 
-  const handleClickLogout = (event) => {
-    if (event.target.id !== "logout") {
-      return;
-    }
-
-    event.preventDefault();
-    store.setUser(null);
-    alert("로그아웃 되었습니다.");
-    router.push("/login");
-  };
-
-  document.addEventListener("click", handleClickLogout);
+  const headerNode = document.createElement("header");
+  headerNode.classList.add(
+    "bg-blue-600",
+    "text-white",
+    "p-4",
+    "sticky",
+    "top-0",
+  );
+  headerNode.innerHTML = `
+    <h1 class="text-2xl font-bold">항해플러스</h1>
+  `;
 
   const navItems = isLoggedIn
     ? `
@@ -32,17 +31,28 @@ const Header = () => {
       <li>${Link({ to: "/login", className: "text-gray-600", children: "로그인" })}</li>
     `;
 
-  return `
-    <header class="bg-blue-600 text-white p-4 sticky top-0">
-      <h1 class="text-2xl font-bold">항해플러스</h1>
-    </header>
-
-    <nav class="bg-white shadow-md p-2 sticky top-14">
-      <ul class="flex justify-around">
-        ${navItems}
-      </ul>
-    </nav>
+  const navNode = document.createElement("nav");
+  navNode.classList.add("bg-white", "shadow-md", "p-2", "sticky", "top-14");
+  navNode.innerHTML = `
+    <ul class="flex justify-around">
+      ${navItems}
+    </ul>
   `;
+
+  const handleClickLogout = (event) => {
+    if (event.target.id !== "logout") {
+      return;
+    }
+
+    event.preventDefault();
+    store.setUser(null);
+    alert("로그아웃 되었습니다.");
+    router.push("/login");
+  };
+
+  navNode.addEventListener("click", handleClickLogout);
+
+  return [headerNode, navNode];
 };
 
 export default Header;

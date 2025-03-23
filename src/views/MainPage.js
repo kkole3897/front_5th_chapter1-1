@@ -10,8 +10,6 @@ const MainPage = () => {
   node.classList.add("bg-gray-100", "min-h-screen", "flex", "justify-center");
   node.innerHTML = `
     <div class="max-w-md w-full">
-      ${Header()}
-
       <main class="p-4">
         ${
           isLoggedIn
@@ -114,6 +112,12 @@ const MainPage = () => {
       ${Footer()}
     </div>
   `;
+
+  const mainEl = node.querySelector("main");
+  const header = Header();
+  header.forEach((el) => {
+    mainEl.insertAdjacentElement("beforebegin", el);
+  });
 
   return node;
 };

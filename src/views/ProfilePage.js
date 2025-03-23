@@ -10,8 +10,6 @@ const ProfilePage = () => {
   node.classList.add("bg-gray-100", "min-h-screen", "flex", "justify-center");
   node.innerHTML = `
     <div class="max-w-md w-full">
-      ${Header()}
-
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">
           <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
@@ -72,6 +70,12 @@ const ProfilePage = () => {
       ${Footer()}
     </div>
   `;
+
+  const header = Header();
+  const mainEl = node.querySelector("main");
+  header.forEach((el) => {
+    mainEl.insertAdjacentElement("beforebegin", el);
+  });
 
   const handleSubmit = (event) => {
     if (event.target.id !== "profile-form") {
