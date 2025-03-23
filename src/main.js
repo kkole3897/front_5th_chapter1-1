@@ -3,7 +3,8 @@ import ProfilePage from "./views/ProfilePage";
 import LoginPage from "./views/LoginPage";
 import NotFoundPage from "./views/NotFoundPage";
 
-import { createHistoryRouter } from "./libs/router";
+import { createHistoryRouter, Navigate } from "./libs/router";
+import store from "./store";
 
 const createRoot = (root) => {
   const render = (callback) => {
@@ -13,10 +14,20 @@ const createRoot = (root) => {
   return { render };
 };
 
+const AuthGuard = (component) => {
+  return () => {
+    if (!store.isLoggedIn()) {
+      return Navigate({ to: "/login", replace: true });
+    }
+
+    return component();
+  };
+};
+
 const root = document.getElementById("root");
 const router = createHistoryRouter([
   { path: "/", component: MainPage },
-  { path: "/profile", component: ProfilePage },
+  { path: "/profile", component: AuthGuard(ProfilePage) },
   { path: "/login", component: LoginPage },
   { path: "*", component: NotFoundPage },
 ]);
