@@ -1,5 +1,7 @@
 const dataLink = "router-link";
 
+let context = null;
+
 /**
  * @param {Array<{ path: string, component: () => string }>} routes
  * @returns {() => string}
@@ -47,6 +49,21 @@ export const createHistoryRouter = (routes) => {
 
     const initialPathname = window.location.pathname;
     handleRoute(initialPathname);
+
+    context = {
+      handleRoute,
+    };
+  };
+
+  return router;
+};
+
+export const useRouter = () => {
+  const router = {
+    push: (path) => {
+      window.history.pushState(null, "", path);
+      context.handleRoute(path);
+    },
   };
 
   return router;
