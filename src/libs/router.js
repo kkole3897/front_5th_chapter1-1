@@ -70,7 +70,6 @@ export const useRouter = () => {
 };
 
 /**
- *
  * @param {object} props
  * @param {string} props.to
  * @param {string} [props.className]

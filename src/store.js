@@ -1,10 +1,9 @@
 /**
  * @typedef {object} User
- * @property {string} id
- * @property {string} name
+ * @property {string} username
  * @property {string} email
  * @property {string} password
- * @property {string} description
+ * @property {string} bio
  */
 
 const store = {
@@ -18,8 +17,8 @@ const store = {
    */
   setUser(user) {
     if (!user) {
-      localStorage.removeItem("user");
       this.state.user = null;
+      localStorage.removeItem("user");
       return;
     }
 

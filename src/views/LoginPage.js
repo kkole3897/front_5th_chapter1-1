@@ -12,15 +12,19 @@ const LoginPage = () => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
-    const name = formData.get("name");
-    const password = formData.get("password");
+    const username = formData.get("username");
 
-    if (!name || !password) {
-      alert("이름과 비밀번호를 입력해주세요.");
+    if (!username) {
+      alert("이름을 입력해주세요.");
       return;
     }
 
-    store.setUser({ name, password });
+    const newUserData = {
+      username,
+      email: "",
+      bio: "",
+    };
+    store.setUser(newUserData);
     alert("로그인 성공");
     router.push("/");
   };
@@ -33,10 +37,10 @@ const LoginPage = () => {
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
         <form id="login-form">
           <div class="mb-4">
-            <input type="text" name="name" placeholder="이름" class="w-full p-2 border rounded">
+            <input id="username" type="text" name="username" placeholder="이름" class="w-full p-2 border rounded">
           </div>
           <div class="mb-6">
-            <input type="password" name="password" placeholder="비밀번호" class="w-full p-2 border rounded">
+            <input id="password" type="password" name="password" placeholder="비밀번호" class="w-full p-2 border rounded">
           </div>
           <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
         </form>

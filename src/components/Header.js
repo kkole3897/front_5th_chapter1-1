@@ -1,16 +1,31 @@
-import { Link } from "../libs/router";
+import { Link, useRouter } from "../libs/router";
 
 import store from "../store";
 
 const Header = () => {
+  const router = useRouter();
+
   const isLoggedIn = store.isLoggedIn();
   const currentPathname = window.location.pathname;
+
+  const handleClickLogout = (event) => {
+    if (event.target.id !== "logout") {
+      return;
+    }
+
+    event.preventDefault();
+    store.setUser(null);
+    alert("로그아웃 되었습니다.");
+    router.push("/");
+  };
+
+  document.addEventListener("click", handleClickLogout);
 
   const navItems = isLoggedIn
     ? `
       <li>${Link({ to: "/", className: currentPathname === "/" ? "text-blue-600" : "text-gray-600", children: "홈" })}</li>
       <li>${Link({ to: "/profile", className: currentPathname === "/profile" ? "text-blue-600" : "text-gray-600", children: "프로필" })}</li>
-      <li>${Link({ to: "#", className: "text-gray-600", children: "로그아웃" })}</li>
+      <li><button id="logout" type="button" class="text-gray-600">로그아웃</button></li>
     `
     : `
       <li>${Link({ to: "/", className: currentPathname === "/" ? "text-blue-600" : "text-gray-600", children: "홈" })}</li>

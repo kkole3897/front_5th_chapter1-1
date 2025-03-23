@@ -6,39 +6,34 @@ const ProfilePage = () => {
   const user = store.state.user;
 
   const handleSubmit = (event) => {
-    if (event.target.id !== "update-profile-form") {
+    if (event.target.id !== "profile-form") {
       return;
     }
 
     event.preventDefault();
 
     const formData = new FormData(event.target);
-    const name = formData.get("username");
+    const username = formData.get("username");
 
-    if (!name) {
+    if (!username) {
       alert("이름을 입력해주세요.");
       return;
     }
 
     const email = formData.get("email");
 
-    if (!email) {
-      alert("이메일을 입력해주세요.");
-      return;
-    }
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (email && !emailRegex.test(email)) {
       alert("이메일 형식이 올바르지 않습니다.");
       return;
     }
 
-    const description = formData.get("bio");
+    const bio = formData.get("bio");
 
     const newUserData = {
-      name,
+      username,
       email,
-      description,
+      bio,
     };
 
     store.updateUser(newUserData);
@@ -58,7 +53,7 @@ const ProfilePage = () => {
           <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
             내 프로필
           </h2>
-          <form id="update-profile-form">
+          <form id="profile-form">
             <div class="mb-4">
               <label
                 for="username"
@@ -69,7 +64,7 @@ const ProfilePage = () => {
                 type="text"
                 id="username"
                 name="username"
-                value="${user?.name ?? ""}"
+                value="${user?.username ?? ""}"
                 class="w-full p-2 border rounded"
               />
             </div>
@@ -98,7 +93,7 @@ const ProfilePage = () => {
                 name="bio"
                 rows="4"
                 class="w-full p-2 border rounded"
-              >${user?.description ?? ""}</textarea>
+              >${user?.bio ?? ""}</textarea>
             </div>
             <button
               type="submit"
