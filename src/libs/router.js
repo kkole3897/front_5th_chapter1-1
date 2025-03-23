@@ -24,15 +24,14 @@ export const createHistoryRouter = (routes) => {
       );
       const fallbackRoute = routes.find((route) => route.path === "*");
 
+      root.innerHTML = "";
       if (matchedRoute) {
-        root.innerHTML = matchedRoute.component();
+        root.appendChild(matchedRoute.component());
         return;
       } else if (fallbackRoute) {
-        root.innerHTML = fallbackRoute.component();
+        root.appendChild(fallbackRoute.component());
         return;
       }
-
-      root.innerHTML = "";
     };
 
     document.addEventListener("click", (event) => {

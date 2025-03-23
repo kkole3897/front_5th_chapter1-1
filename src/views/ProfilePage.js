@@ -6,46 +6,9 @@ import store from "../store";
 const ProfilePage = () => {
   const user = store.state.user;
 
-  const handleSubmit = (event) => {
-    if (event.target.id !== "profile-form") {
-      return;
-    }
-
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const username = formData.get("username");
-
-    if (!username) {
-      alert("이름을 입력해주세요.");
-      return;
-    }
-
-    const email = formData.get("email");
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (email && !emailRegex.test(email)) {
-      alert("이메일 형식이 올바르지 않습니다.");
-      return;
-    }
-
-    const bio = formData.get("bio");
-
-    const newUserData = {
-      username,
-      email,
-      bio,
-    };
-
-    store.updateUser(newUserData);
-
-    alert("프로필이 업데이트 되었습니다.");
-  };
-
-  document.addEventListener("submit", handleSubmit);
-
-  return `
-  <div class="bg-gray-100 min-h-screen flex justify-center">
+  const node = document.createElement("div");
+  node.classList.add("bg-gray-100", "min-h-screen", "flex", "justify-center");
+  node.innerHTML = `
     <div class="max-w-md w-full">
       ${Header()}
 
@@ -108,8 +71,47 @@ const ProfilePage = () => {
 
       ${Footer()}
     </div>
-  </div>
-`;
+  `;
+
+  const handleSubmit = (event) => {
+    if (event.target.id !== "profile-form") {
+      return;
+    }
+
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const username = formData.get("username");
+
+    if (!username) {
+      alert("이름을 입력해주세요.");
+      return;
+    }
+
+    const email = formData.get("email");
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email && !emailRegex.test(email)) {
+      alert("이메일 형식이 올바르지 않습니다.");
+      return;
+    }
+
+    const bio = formData.get("bio");
+
+    const newUserData = {
+      username,
+      email,
+      bio,
+    };
+
+    store.updateUser(newUserData);
+
+    alert("프로필이 업데이트 되었습니다.");
+  };
+
+  node.addEventListener("submit", handleSubmit);
+
+  return node;
 };
 
 export default ProfilePage;
