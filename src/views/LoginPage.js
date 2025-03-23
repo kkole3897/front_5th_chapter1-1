@@ -26,7 +26,7 @@ const LoginPage = () => {
     };
     store.setUser(newUserData);
     alert("로그인 성공");
-    router.push("/");
+    router.push("/profile");
   };
 
   document.addEventListener("submit", handleSubmit);
@@ -37,7 +37,7 @@ const LoginPage = () => {
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
         <form id="login-form">
           <div class="mb-4">
-            <input id="username" type="text" name="username" placeholder="이름" class="w-full p-2 border rounded">
+            <input id="username" type="text" name="username" placeholder="사용자 이름" class="w-full p-2 border rounded">
           </div>
           <div class="mb-6">
             <input id="password" type="password" name="password" placeholder="비밀번호" class="w-full p-2 border rounded">

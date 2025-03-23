@@ -16,7 +16,7 @@ const Header = () => {
     event.preventDefault();
     store.setUser(null);
     alert("로그아웃 되었습니다.");
-    router.push("/");
+    router.push("/login");
   };
 
   document.addEventListener("click", handleClickLogout);
@@ -25,7 +25,7 @@ const Header = () => {
     ? `
       <li>${Link({ to: "/", className: currentPathname === "/" ? "text-blue-600" : "text-gray-600", children: "홈" })}</li>
       <li>${Link({ to: "/profile", className: currentPathname === "/profile" ? "text-blue-600" : "text-gray-600", children: "프로필" })}</li>
-      <li><button id="logout" type="button" class="text-gray-600">로그아웃</button></li>
+      <li><a href="#" id="logout" type="button" class="text-gray-600">로그아웃</a></li>
     `
     : `
       <li>${Link({ to: "/", className: currentPathname === "/" ? "text-blue-600" : "text-gray-600", children: "홈" })}</li>
