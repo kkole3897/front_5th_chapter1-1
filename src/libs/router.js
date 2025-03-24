@@ -84,7 +84,6 @@ export const createHashRouter = (routes) => {
 
     window.addEventListener("hashchange", () => {
       const currentHash = window.location.hash;
-      console.log("currentHash", currentHash);
       handleRoute(currentHash);
     });
 
