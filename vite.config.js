@@ -8,4 +8,12 @@ export default defineConfig({
     exclude: ["**/e2e/**", "**/*.e2e.spec.js", "**/node_modules/**"],
   },
   base: "./",
+  build: {
+    rollupOptions: {
+      input: {
+        main: "./index.html",
+        hash: "./index.hash.html",
+      },
+    },
+  },
 });
