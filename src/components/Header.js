@@ -1,12 +1,13 @@
-import { Link, useRouter } from "../libs/router";
+import { Link, useRouter, useRoute } from "../libs/router";
 
 import store from "../store";
 
 const Header = () => {
   const router = useRouter();
+  const route = useRoute();
 
   const isLoggedIn = store.isLoggedIn();
-  const currentPathname = window.location.pathname;
+  const currentPathname = route.pathname;
 
   const headerNode = document.createElement("header");
   headerNode.classList.add(
@@ -22,8 +23,8 @@ const Header = () => {
 
   const navItems = isLoggedIn
     ? `
-      <li>${Link({ to: "/", className: currentPathname === "/" ? "text-blue-600" : "text-gray-600", children: "홈" })}</li>
-      <li>${Link({ to: "/profile", className: currentPathname === "/profile" ? "text-blue-600" : "text-gray-600", children: "프로필" })}</li>
+      <li>${Link({ to: "/", className: currentPathname === "/" ? "text-blue-600 font-bold" : "text-gray-600", children: "홈" })}</li>
+      <li>${Link({ to: "/profile", className: currentPathname === "/profile" ? "text-blue-600 font-bold" : "text-gray-600", children: "프로필" })}</li>
       <li><a href="#" id="logout" type="button" class="text-gray-600">로그아웃</a></li>
     `
     : `

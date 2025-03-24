@@ -117,6 +117,17 @@ export const useRouter = () => {
   return router;
 };
 
+export const useRoute = () => {
+  const route = {
+    pathname:
+      routerMode === "history"
+        ? window.location.pathname
+        : (window.location.hash || "/").replace("#", ""),
+  };
+
+  return route;
+};
+
 /**
  * @param {object} props
  * @param {string} props.to
