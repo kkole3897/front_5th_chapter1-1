@@ -1,6 +1,7 @@
 const dataLink = "router-link";
 
 let globalRoutes = [];
+let routerMode = "history";
 
 /**
  * @param {Array<{ path: string, component: () => string }>} routes
@@ -8,7 +9,7 @@ let globalRoutes = [];
  */
 export const createHistoryRouter = (routes) => {
   globalRoutes = routes;
-
+  routerMode = "history";
   /**
    * @param {HTMLElement | null} root
    */
@@ -56,15 +57,61 @@ export const createHistoryRouter = (routes) => {
   return router;
 };
 
+export const createHashRouter = (routes) => {
+  globalRoutes = routes;
+  routerMode = "hash";
+
+  const router = (root) => {
+    const handleRoute = (currentHash) => {
+      if (!root) {
+        return;
+      }
+
+      const currentPath = (currentHash || "/").replace("#", "");
+
+      const matchedRoute = routes.find((route) => route.path === currentPath);
+      const fallbackRoute = routes.find((route) => route.path === "*");
+
+      root.innerHTML = "";
+      if (matchedRoute) {
+        root.appendChild(matchedRoute.component());
+        return;
+      } else if (fallbackRoute) {
+        root.appendChild(fallbackRoute.component());
+        return;
+      }
+    };
+
+    window.addEventListener("hashchange", () => {
+      const currentHash = window.location.hash;
+      console.log("currentHash", currentHash);
+      handleRoute(currentHash);
+    });
+
+    const initialHash = window.location.hash;
+    handleRoute(initialHash);
+  };
+
+  return router;
+};
+
 export const useRouter = () => {
   const router = {
     push: (path) => {
-      window.history.pushState(null, "", path);
-      window.dispatchEvent(new Event("popstate"));
+      if (routerMode === "history") {
+        window.history.pushState(null, "", path);
+        window.dispatchEvent(new Event("popstate"));
+      } else {
+        window.location.hash = path;
+      }
     },
     replace: (path) => {
-      window.history.replaceState(null, "", path);
-      window.dispatchEvent(new Event("popstate"));
+      if (routerMode === "history") {
+        window.history.replaceState(null, "", path);
+        window.dispatchEvent(new Event("popstate"));
+      } else {
+        window.location.hash = path;
+      }
     },
   };
 
@@ -79,7 +126,9 @@ export const useRouter = () => {
  * @returns {string}
  */
 export const Link = (props) => {
-  return `<a href="${props.to}" data-link="${dataLink}" ${props.className ? `class="${props.className}"` : ""}>${props.children ?? ""}</a>`;
+  const href = routerMode === "history" ? props.to : `#${props.to}`;
+
+  return `<a href="${href}" data-link="${dataLink}" ${props.className ? `class="${props.className}"` : ""}>${props.children ?? ""}</a>`;
 };
 
 /**
@@ -90,10 +139,18 @@ export const Link = (props) => {
  * @returns {string}
  */
 export const Navigate = (props) => {
-  if (props.replace) {
-    window.history.replaceState(null, "", props.to);
+  if (routerMode === "history") {
+    if (props.replace) {
+      window.history.replaceState(null, "", props.to);
+    } else {
+      window.history.pushState(null, "", props.to);
+    }
   } else {
-    window.history.pushState(null, "", props.to);
+    if (props.replace) {
+      window.location.hash = props.to;
+    } else {
+      window.location.hash = props.to;
+    }
   }
 
   return globalRoutes.find((route) => route.path === props.to)?.component();
