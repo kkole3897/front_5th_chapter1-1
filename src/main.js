@@ -24,11 +24,21 @@ const AuthGuard = (component) => {
   };
 };
 
+const PublicGuard = (component) => {
+  return () => {
+    if (store.isLoggedIn()) {
+      return Navigate({ to: "/", replace: true });
+    }
+
+    return component();
+  };
+};
+
 const root = document.getElementById("root");
 const router = createHistoryRouter([
   { path: "/", component: MainPage },
   { path: "/profile", component: AuthGuard(ProfilePage) },
-  { path: "/login", component: LoginPage },
+  { path: "/login", component: PublicGuard(LoginPage) },
   { path: "*", component: NotFoundPage },
 ]);
 
