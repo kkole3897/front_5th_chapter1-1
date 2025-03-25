@@ -7,7 +7,7 @@ export default defineConfig({
     setupFiles: "./src/setupTests.js",
     exclude: ["**/e2e/**", "**/*.e2e.spec.js", "**/node_modules/**"],
   },
-  base: "./",
+  base: process.env.VITE_BASE_URL ?? "./",
   build: {
     rollupOptions: {
       input: {
