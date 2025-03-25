@@ -7,6 +7,7 @@ export default defineConfig({
     setupFiles: "./src/setupTests.js",
     exclude: ["**/e2e/**", "**/*.e2e.spec.js", "**/node_modules/**"],
   },
+  base: "./",
   build: {
     rollupOptions: {
       input: {
