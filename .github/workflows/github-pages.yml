@@ -23,7 +23,6 @@ jobs:
       - name: Generate .env File
         run: jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< $VARIABLE_CONTEXT >> .env
         env:
-          SECRETS_CONTEXT: ${{ toJson(secrets) }}
           VARIABLE_CONTEXT: ${{ toJson(vars) }}
       - uses: pnpm/action-setup@v4
         with:
