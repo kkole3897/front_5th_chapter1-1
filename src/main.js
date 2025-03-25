@@ -5,6 +5,7 @@ import NotFoundPage from "./views/NotFoundPage";
 
 import { createHistoryRouter, Navigate } from "./libs/router";
 import store from "./store";
+import { HISTORY_ROUTER_BASENAME } from "./constants";
 
 const createRoot = (root) => {
   const render = (callback) => {
@@ -35,11 +36,14 @@ const PublicGuard = (component) => {
 };
 
 const root = document.getElementById("root");
-const router = createHistoryRouter([
-  { path: "/", component: MainPage },
-  { path: "/profile", component: AuthGuard(ProfilePage) },
-  { path: "/login", component: PublicGuard(LoginPage) },
-  { path: "*", component: NotFoundPage },
-]);
+const router = createHistoryRouter(
+  [
+    { path: "/", component: MainPage },
+    { path: "/profile", component: AuthGuard(ProfilePage) },
+    { path: "/login", component: PublicGuard(LoginPage) },
+    { path: "*", component: NotFoundPage },
+  ],
+  { basename: HISTORY_ROUTER_BASENAME },
+);
 
 createRoot(root).render(router);

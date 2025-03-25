@@ -2,18 +2,34 @@ const dataLink = "router-link";
 
 let globalRoutes = [];
 let routerMode = "history";
+let basename = "";
+
+const prependBasenameToPath = (path, basename) => {
+  if (basename) {
+    return `${basename}${path}`;
+  }
+
+  return path;
+};
 
 /**
  * @param {Array<{ path: string, component: () => string }>} routes
+ * @param {object} options
+ * @param {string} [options.basename]
  * @returns {() => string}
  */
-export const createHistoryRouter = (routes) => {
+export const createHistoryRouter = (routes, options = {}) => {
   globalRoutes = routes;
   routerMode = "history";
+  if (options.basename && !options.basename.startsWith("/")) {
+    basename = `/${options.basename}`;
+  } else {
+    basename = options.basename;
+  }
+
   /**
    * @param {HTMLElement | null} root
    */
-
   const router = (root) => {
     const handleRoute = (currentPathname) => {
       if (!root) {
@@ -21,7 +37,8 @@ export const createHistoryRouter = (routes) => {
       }
 
       const matchedRoute = routes.find(
-        (route) => route.path === currentPathname,
+        (route) =>
+          prependBasenameToPath(route.path, basename) === currentPathname,
       );
       const fallbackRoute = routes.find((route) => route.path === "*");
 
@@ -40,6 +57,7 @@ export const createHistoryRouter = (routes) => {
         event.preventDefault();
         const to = event.target.href;
         window.history.pushState(null, "", to);
+
         const newPathname = to.replace(window.location.origin, "");
         handleRoute(newPathname);
       }
@@ -98,7 +116,11 @@ export const useRouter = () => {
   const router = {
     push: (path) => {
       if (routerMode === "history") {
-        window.history.pushState(null, "", path);
+        window.history.pushState(
+          null,
+          "",
+          prependBasenameToPath(path, basename),
+        );
         window.dispatchEvent(new Event("popstate"));
       } else {
         window.location.hash = path;
@@ -106,7 +128,11 @@ export const useRouter = () => {
     },
     replace: (path) => {
       if (routerMode === "history") {
-        window.history.replaceState(null, "", path);
+        window.history.replaceState(
+          null,
+          "",
+          prependBasenameToPath(path, basename),
+        );
         window.dispatchEvent(new Event("popstate"));
       } else {
         window.location.hash = path;
@@ -121,7 +147,7 @@ export const useRoute = () => {
   const route = {
     pathname:
       routerMode === "history"
-        ? window.location.pathname
+        ? window.location.pathname.replace(basename, "")
         : (window.location.hash || "/").replace("#", ""),
   };
 
@@ -136,7 +162,10 @@ export const useRoute = () => {
  * @returns {string}
  */
 export const Link = (props) => {
-  const href = routerMode === "history" ? props.to : `#${props.to}`;
+  const href =
+    routerMode === "history"
+      ? prependBasenameToPath(props.to, basename)
+      : `#${props.to}`;
 
   return `<a href="${href}" data-link="${dataLink}" ${props.className ? `class="${props.className}"` : ""}>${props.children ?? ""}</a>`;
 };
@@ -151,9 +180,17 @@ export const Link = (props) => {
 export const Navigate = (props) => {
   if (routerMode === "history") {
     if (props.replace) {
-      window.history.replaceState(null, "", props.to);
+      window.history.replaceState(
+        null,
+        "",
+        prependBasenameToPath(props.to, basename),
+      );
     } else {
-      window.history.pushState(null, "", props.to);
+      window.history.pushState(
+        null,
+        "",
+        prependBasenameToPath(props.to, basename),
+      );
     }
   } else {
     if (props.replace) {
